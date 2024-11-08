@@ -1,11 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Document</title>
+   <title>Machinery</title>
+
 </head>
+
 <body>
-   
+   <h2>Add Machine</h2>
+   <form action="/submit" method="post">
+      <label for="machineId">Machine ID:</label>
+      <input type="text" id="machineId" name="machineId" required><br><br>
+
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required><br><br>
+
+      <label for="room">Room:</label>
+      <input type="text" id="room" name="room" required><br><br>
+
+      <label for="cost">Cost:</label>
+      <input type="number" id="cost" name="cost" required><br><br>
+
+      <label for="manufacturer">Manufacturer:</label>
+      <input type="text" id="manufacturer" name="manufacturer" required><br><br>
+
+      <input type="submit" value="Add">
+   </form>
+
 </body>
+
 </html>

@@ -1,12 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Doctor</title>
+   <title>Doctor Management</title>
 </head>
+
 <body>
-   doctor
-   
+   <h1>Doctor Management</h1>
+
+   <!-- Form to add new doctor -->
+   <form id="doctorForm">
+      <label for="employeeId">Employee ID:</label>
+      <input type="text" id="employeeId" name="employeeId" required><br><br>
+
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name"><br><br>
+
+      <label for="licenseNumber">License Number:</label>
+      <input type="text" id="licenseNumber" name="licenseNumber"><br><br>
+
+      <label for="department">Department:</label>
+      <input type="text" id="department" name="department"><br><br>
+
+      <label for="experience">Years of Experience:</label>
+      <input type="number" id="experience" name="experience"><br><br>
+
+      <input type="submit" value="Add Doctor">
+   </form>
+
+   <!-- Table to display doctors -->
+   <table id="doctorTable">
+      <thead>
+         <tr>
+            <th>Employee ID</th>
+            <th>Name</th>
+            <th>License Number</th>
+            <th>Department</th>
+            <th>Experience</th>
+         </tr>
+      </thead>
+      <tbody>
+         <!-- Rows will be added dynamically here -->
+      </tbody>
+   </table>
+
+   <script>
+      // Function to load all doctors and display in the table
+      function loadDoctors() {
+         fetch("http://localhost:3002/doctor")
+            .then(response => response.json())
+            .then(doctors => {
+               const tableBody = document.getElementById("doctorTable").getElementsByTagName("tbody")[0];
+               tableBody.innerHTML = ""; // Clear existing rows
+
+               doctors.forEach(doctor => {
+                  const row = document.createElement("tr");
+                  row.innerHTML = `
+                     <td>${doctor.eid}</td>
+                     <td>${doctor.name}</td>
+                     <td>${doctor.license_no}</td>
+                     <td>${doctor.department}</td>
+                     <td>${doctor.yoe}</td>
+                  `;
+                  tableBody.appendChild(row);
+               });
+            })
+            .catch(error => console.error("Error loading doctors:", error));
+      }
+
+      // Function to add a new doctor
+      function addDoctor(event) {
+         event.preventDefault(); // Prevent form from submitting traditionally
+
+         var employeeId = document.getElementById("employeeId").value;
+         var name = document.getElementById("name").value;
+         var licenseNumber = document.getElementById("licenseNumber").value;
+         var department = document.getElementById("department").value;
+         var experience = document.getElementById("experience").value;
+
+         fetch("http://localhost:3002/doctor", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+               employeeId,
+               name,
+               licenseNumber,
+               department,
+               experience
+            }),
+         })
+            .then(response => response.text())
+            .then(data => {
+               console.log("Response:", data);
+               loadDoctors(); // Refresh the table
+            })
+            .catch(error => console.error("Error adding doctor:", error));
+      }
+
+      // Load doctors on page load
+      window.onload = loadDoctors;
+
+      // Attach the addDoctor function to the form submission
+      document.getElementById("doctorForm").addEventListener("submit", addDoctor);
+   </script>
 </body>
+
 </html>

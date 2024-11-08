@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Document</title>
 </head>
+
 <body>
-   
+   <h2>Prescription Form</h2>
+   <form action="/submit_prescription" method="POST"> <label for="prescription_id">Prescription ID:</label> <input
+         type="number" id="prescription_id" name="prescription_id" required><br><br> <label for="PID">Patient ID
+         (PID):</label> <input type="number" id="PID" name="PID" required><br><br> <label for="EID">Doctor ID
+         (EID):</label> <input type="number" id="EID" name="EID" required><br><br> <label for="history">History:</label>
+      <input type="text" id="history" name="history" maxlength="50"><br><br> <label for="weight">Weight:</label> <input
+         type="number" id="weight" name="weight" required><br><br> <label for="remarks">Remarks:</label> <input
+         type="text" id="remarks" name="remarks" maxlength="30"><br><br> <button type="submit">Submit
+         Prescription</button>
+   </form>
+
 </body>
+
 </html>

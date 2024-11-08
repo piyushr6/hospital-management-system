@@ -1,11 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Document</title>
 </head>
+
 <body>
-   
+   <h2>Add Ambulance</h2>
+   <form action="/submit" method="post">
+      <label for="ambulanceNumber">Ambulance Number:</label>
+      <input type="text" id="ambulanceNumber" name="ambulanceNumber" required><br><br>
+
+      <label for="driverName">Driver Name:</label>
+      <input type="text" id="driverName" name="driverName" required><br><br>
+
+      <label for="contactNumber">Contact Number:</label>
+      <input type="tel" id="contactNumber" name="contactNumber" pattern="[0-9]{10}" required><br><br>
+
+      <label for="status">Status:</label>
+      <select id="status" name="status" required>
+         <option value="available">Available</option>
+         <option value="on-duty">On Duty</option>
+         <option value="maintenance">Maintenance</option>
+         <option value="unavailable">Unavailable</option>
+      </select><br><br>
+
+      <input type="submit" value="Add">
+   </form>
+
 </body>
+
 </html>
