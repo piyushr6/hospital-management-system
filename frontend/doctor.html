@@ -5,6 +5,115 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Doctor Management</title>
+
+   <style>
+      /* General body styling */
+      body {
+         font-family: Arial, sans-serif;
+         background-color: #f4f4f4;
+         margin: 0;
+         padding: 20px;
+      }
+
+      /* Form container styling */
+      form {
+         background-color: #ffffff;
+         padding: 20px;
+         border-radius: 8px;
+         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+         margin-bottom: 30px;
+         max-width: 500px;
+         margin-left: auto;
+         margin-right: auto;
+      }
+
+      /* Form label and input styling */
+      label {
+         font-size: 14px;
+         color: #333;
+         display: block;
+         margin-bottom: 8px;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+         width: 100%;
+         padding: 10px;
+         margin-bottom: 12px;
+         border: 1px solid #ccc;
+         border-radius: 4px;
+         font-size: 14px;
+      }
+
+      input[type="submit"] {
+         background-color: #4CAF50;
+         color: white;
+         border: none;
+         padding: 10px 20px;
+         cursor: pointer;
+         font-size: 14px;
+         border-radius: 4px;
+         width: 100%;
+      }
+
+      input[type="submit"]:hover {
+         background-color: #45a049;
+      }
+
+      /* Table styling */
+      table {
+         width: 100%;
+         border-collapse: collapse;
+         margin-top: 20px;
+      }
+
+      th,
+      td {
+         padding: 12px;
+         text-align: left;
+         border-bottom: 1px solid #ddd;
+      }
+
+      th {
+         background-color: #f2f2f2;
+         color: #333;
+      }
+
+      td {
+         background-color: #ffffff;
+         color: #555;
+      }
+
+      /* Button styling inside the table */
+      button {
+         background-color: #007BFF;
+         color: white;
+         padding: 8px 15px;
+         border: none;
+         border-radius: 4px;
+         cursor: pointer;
+         font-size: 14px;
+      }
+
+      button:hover {
+         background-color: #0056b3;
+      }
+
+      /* Styling for action buttons */
+      button {
+         margin: 0 5px;
+      }
+
+      h1 {
+         text-align: center;
+      }
+
+      #delbtn {
+         background-color: red;
+      }
+   </style>
+
+
 </head>
 
 <body>
@@ -64,8 +173,8 @@
                      <td>${doctor.department}</td>
                      <td>${doctor.yoe}</td>
                      <td>
-                        <button onclick="updateDoctor(${doctor.eid})">Update</button>
-                        <button onclick="deleteDoctor(${doctor.eid})">Delete</button>
+                        <button id="updbtn"  onclick="updateDoctor(${doctor.eid})">Update</button>
+                        <button id="delbtn" onclick="deleteDoctor(${doctor.eid})">Delete</button>
                      </td>
                   `;
                   tableBody.appendChild(row);

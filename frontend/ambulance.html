@@ -4,32 +4,179 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Document</title>
+   <title>Ambulance Management</title>
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+         background-color: #f4f4f4;
+         margin: 0;
+         padding: 20px;
+      }
+
+      form {
+         background-color: #ffffff;
+         padding: 20px;
+         border-radius: 8px;
+         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+         margin-bottom: 30px;
+         max-width: 500px;
+         margin-left: auto;
+         margin-right: auto;
+      }
+
+      label {
+         font-size: 14px;
+         color: #333;
+         display: block;
+         margin-bottom: 8px;
+      }
+
+      input[type="text"],
+      input[type="tel"] {
+         width: 100%;
+         padding: 10px;
+         margin-bottom: 12px;
+         border: 1px solid #ccc;
+         border-radius: 4px;
+         font-size: 14px;
+      }
+
+      input[type="submit"] {
+         background-color: #4CAF50;
+         color: white;
+         border: none;
+         padding: 10px 20px;
+         cursor: pointer;
+         font-size: 14px;
+         border-radius: 4px;
+         width: 100%;
+      }
+
+      input[type="submit"]:hover {
+         background-color: #45a049;
+      }
+
+      table {
+         width: 100%;
+         border-collapse: collapse;
+         margin-top: 20px;
+      }
+
+      th,
+      td {
+         padding: 12px;
+         text-align: left;
+         border-bottom: 1px solid #ddd;
+      }
+
+      th {
+         background-color: #f2f2f2;
+         color: #333;
+      }
+
+      td {
+         background-color: #ffffff;
+         color: #555;
+      }
+
+      button {
+         background-color: #007BFF;
+         color: white;
+         padding: 8px 15px;
+         border: none;
+         border-radius: 4px;
+         cursor: pointer;
+         font-size: 14px;
+      }
+
+      button:hover {
+         background-color: #0056b3;
+      }
+
+      h1 {
+         text-align: center;
+      }
+
+      #delbtn {
+         background-color: red;
+      }
+   </style>
 </head>
 
 <body>
-   <h2>Add Ambulance</h2>
-   <form action="/submit" method="post">
+   <h1>Ambulance Management</h1>
+   <form id="ambulanceForm">
       <label for="ambulanceNumber">Ambulance Number:</label>
       <input type="text" id="ambulanceNumber" name="ambulanceNumber" required><br><br>
-
       <label for="driverName">Driver Name:</label>
       <input type="text" id="driverName" name="driverName" required><br><br>
-
-      <label for="contactNumber">Contact Number:</label>
-      <input type="tel" id="contactNumber" name="contactNumber" pattern="[0-9]{10}" required><br><br>
-
       <label for="status">Status:</label>
-      <select id="status" name="status" required>
-         <option value="available">Available</option>
-         <option value="on-duty">On Duty</option>
-         <option value="maintenance">Maintenance</option>
-         <option value="unavailable">Unavailable</option>
-      </select><br><br>
-
-      <input type="submit" value="Add">
+      <input type="text" id="status" name="status" required><br><br>
+      <label for="contactNumber">Contact Number:</label>
+      <input type="tel" id="contactNumber" name="contactNumber" required><br><br>
+      <input type="submit" value="Add Ambulance">
    </form>
-
+   <table id="ambulanceTable">
+      <thead>
+         <tr>
+            <th>Ambulance Number</th>
+            <th>Driver Name</th>
+            <th>Status</th>
+            <th>Contact Number</th>
+            <th>Actions</th>
+         </tr>
+      </thead>
+      <tbody>
+         <!-- Rows will be added dynamically here -->
+      </tbody>
+   </table>
+   <script>
+      function loadAmbulances() {
+         fetch("http://localhost:3002/ambulance")
+            .then(response => response.json())
+            .then(ambulances => {
+               const tableBody = document.getElementById("ambulanceTable").getElementsByTagName("tbody")[0];
+               tableBody.innerHTML = "";
+               ambulances.forEach(ambulance => {
+                  const row = document.createElement("tr");
+                  row.innerHTML = `
+                     <td>${ambulance.amb_num}</td>
+                     <td>${ambulance.driver_name}</td>
+                     <td>${ambulance.status}</td>
+                     <td>${ambulance.contact_no}</td>
+                    <td>
+                        <button id="updbtn"  onclick="updateDoctor(${ambulance.amb_num})">Update</button>
+                        <button id="delbtn" onclick="deleteDoctor(${ambulance.amb_num})">Delete</button>
+                     </td>
+                  `;
+                  tableBody.appendChild(row);
+               });
+            })
+            .catch(error => console.error("Error loading ambulances:", error));
+      }
+      function addAmbulance(event) {
+         event.preventDefault();
+         const ambulanceNumber = document.getElementById("ambulanceNumber").value;
+         const driverName = document.getElementById("driverName").value;
+         const status = document.getElementById("status").value;
+         const contactNumber = document.getElementById("contactNumber").value;
+         fetch("http://localhost:3002/ambulance", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ambulanceNumber, driverName, status, contactNumber }),
+         })
+            .then(response => response.text())
+            .then(data => {
+               alert(data);
+               loadAmbulances();
+            })
+            .catch(error => console.error("Error adding ambulance:", error));
+      }
+      document.getElementById("ambulanceForm").addEventListener("submit", addAmbulance);
+      window.onload = loadAmbulances;
+   </script>
 </body>
 
 </html>

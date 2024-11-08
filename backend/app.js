@@ -37,16 +37,15 @@ const tableMappings = {
          experience: "yoe"
       }
    },
-   patient: {
-      tableName: "patient",
+   ambulance: {
+      tableName: "ambulance",
       columns: {
-         patientId: "pid",
-         name: "name",
-         age: "age",
-         diagnosis: "diagnosis"
+         ambulanceNumber: "amb_num",
+         driverName: "driver_name",
+         status: "status",
+         contactNumber: "contact_no"
       }
-   },
-   // Add other mappings as needed for each section
+   }
 };
 
 // Function to handle the common GET request for any table
@@ -161,4 +160,25 @@ app.delete("/doctor/:id", (req, res) => {
 
 app.listen(PORT, () => {
    console.log(`Server running on http://localhost:${PORT}`);
+});
+
+
+// GET route for ambulances
+app.get("/ambulance", (req, res) => {
+   getEntityData("ambulance", res);
+});
+
+// POST route to add an ambulance
+app.post("/ambulance", (req, res) => {
+   addEntityData("ambulance", req, res);
+});
+
+// PUT route to update ambulance
+app.put("/ambulance/:id", (req, res) => {
+   updateEntityData("ambulance", req, res);
+});
+
+// DELETE route to delete an ambulance
+app.delete("/ambulance/:id", (req, res) => {
+   deleteEntityData("ambulance", req, res);
 });
