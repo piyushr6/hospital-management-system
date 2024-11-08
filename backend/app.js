@@ -4,7 +4,8 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 
 const app = express();
-const PORT = 3002;
+const PORT = 3003;
+
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -162,6 +163,56 @@ app.listen(PORT, () => {
    console.log(`Server running on http://localhost:${PORT}`);
 });
 
+// Function to delete an ambulance by its number
+function deleteAmbulance(ambulanceNumber) {
+   if (confirm("Are you sure you want to delete this ambulance?")) {
+      fetch(`http://localhost:3003/ambulance/${ambulanceNumber}`, {
+         method: "DELETE",
+      })
+         .then(response => {
+            if (response.ok) {
+               alert("Ambulance deleted successfully!");
+               loadAmbulances(); // Reload table after deletion
+            } else {
+               alert("Failed to delete the ambulance.");
+            }
+         })
+         .catch(error => console.error("Error deleting ambulance:", error));
+   }
+}
+
+// Function to update an ambulance's information by its number
+function updateAmbulance(ambulanceNumber) {
+   const newDriverName = prompt("Enter the new driver name:");
+   const newStatus = prompt("Enter the new status:");
+   const newContactNumber = prompt("Enter the new contact number:");
+
+   if (newDriverName && newStatus && newContactNumber) {
+      fetch(`http://localhost:3003/ambulance/${ambulanceNumber}`, {
+         method: "PUT",
+         headers: {
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify({
+            driverName: newDriverName,
+            status: newStatus,
+            contactNumber: newContactNumber
+         }),
+      })
+         .then(response => {
+            if (response.ok) {
+               alert("Ambulance updated successfully!");
+               loadAmbulances(); // Reload table after update
+            } else {
+               alert("Failed to update the ambulance.");
+            }
+         })
+         .catch(error => console.error("Error updating ambulance:", error));
+   } else {
+      alert("All fields are required for updating.");
+   }
+}
+
 
 // GET route for ambulances
 app.get("/ambulance", (req, res) => {
@@ -173,12 +224,12 @@ app.post("/ambulance", (req, res) => {
    addEntityData("ambulance", req, res);
 });
 
-// PUT route to update ambulance
+// PUT route to update an ambulance by its ID
 app.put("/ambulance/:id", (req, res) => {
    updateEntityData("ambulance", req, res);
 });
 
-// DELETE route to delete an ambulance
+// DELETE route to delete an ambulance by its ID
 app.delete("/ambulance/:id", (req, res) => {
    deleteEntityData("ambulance", req, res);
 });
