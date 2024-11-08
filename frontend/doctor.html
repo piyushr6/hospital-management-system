@@ -10,7 +10,6 @@
 <body>
    <h1>Doctor Management</h1>
 
-   <!-- Form to add new doctor -->
    <form id="doctorForm">
       <label for="employeeId">Employee ID:</label>
       <input type="text" id="employeeId" name="employeeId" required><br><br>
@@ -39,6 +38,7 @@
             <th>License Number</th>
             <th>Department</th>
             <th>Experience</th>
+            <!-- <th>Actions</th> -->
          </tr>
       </thead>
       <tbody>
@@ -47,7 +47,7 @@
    </table>
 
    <script>
-      // Function to load all doctors and display in the table
+      // Function to load all doctors from the server and populate the table
       function loadDoctors() {
          fetch("http://localhost:3002/doctor")
             .then(response => response.json())
@@ -63,6 +63,10 @@
                      <td>${doctor.license_no}</td>
                      <td>${doctor.department}</td>
                      <td>${doctor.yoe}</td>
+                     <td>
+                        <button onclick="updateDoctor(${doctor.eid})">Update</button>
+                        <button onclick="deleteDoctor(${doctor.eid})">Delete</button>
+                     </td>
                   `;
                   tableBody.appendChild(row);
                });
@@ -74,31 +78,75 @@
       function addDoctor(event) {
          event.preventDefault(); // Prevent form from submitting traditionally
 
-         var employeeId = document.getElementById("employeeId").value;
-         var name = document.getElementById("name").value;
-         var licenseNumber = document.getElementById("licenseNumber").value;
-         var department = document.getElementById("department").value;
-         var experience = document.getElementById("experience").value;
+         const employeeId = document.getElementById("employeeId").value;
+         const name = document.getElementById("name").value;
+         const licenseNumber = document.getElementById("licenseNumber").value;
+         const department = document.getElementById("department").value;
+         const experience = document.getElementById("experience").value;
 
          fetch("http://localhost:3002/doctor", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-               employeeId,
-               name,
-               licenseNumber,
-               department,
-               experience
-            }),
+            body: JSON.stringify({ employeeId, name, licenseNumber, department, experience }),
          })
             .then(response => response.text())
             .then(data => {
-               console.log("Response:", data);
+               alert(data);
                loadDoctors(); // Refresh the table
             })
             .catch(error => console.error("Error adding doctor:", error));
+      }
+
+      // Function to update an existing doctor
+      function updateDoctor(id) {
+         const newName = prompt("Enter new name:");
+         const newLicense = prompt("Enter new license number:");
+         const newDepartment = prompt("Enter new department:");
+         const newExperience = prompt("Enter new years of experience:");
+
+         if (newName && newLicense && newDepartment && newExperience) {
+            fetch(`http://localhost:3002/doctor/${id}`, {
+               method: "PUT",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+               body: JSON.stringify({
+                  name: newName,
+                  licenseNumber: newLicense,
+                  department: newDepartment,
+                  experience: newExperience,
+               }),
+            })
+               .then(response => {
+                  console.log(response); // Debugging line
+                  return response.text();
+               })
+               .then(data => {
+                  alert(data);
+                  loadDoctors(); // Refresh the table
+               })
+               .catch(error => console.error("Error updating doctor:", error));
+         }
+      }
+
+      // Function to delete a doctor
+      function deleteDoctor(id) {
+         if (confirm("Are you sure you want to delete this doctor?")) {
+            fetch(`http://localhost:3002/doctor/${id}`, {
+               method: "DELETE",
+            })
+               .then(response => {
+                  console.log(response); // Debugging line
+                  return response.text();
+               })
+               .then(data => {
+                  alert(data);
+                  loadDoctors(); // Refresh the table
+               })
+               .catch(error => console.error("Error deleting doctor:", error));
+         }
       }
 
       // Load doctors on page load
