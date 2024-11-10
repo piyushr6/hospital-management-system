@@ -1,11 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Document</title>
+   <title style="text-align: center;">Patient Management</title>
+
+   <style>
+      /* General body styling */
+      body {
+         font-family: Arial, sans-serif;
+         background-color: #f4f4f4;
+         margin: 0;
+         padding: 20px;
+      }
+
+      /* Form container styling */
+      form {
+         background-color: #ffffff;
+         padding: 20px;
+         border-radius: 8px;
+         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+         margin-bottom: 30px;
+         max-width: 500px;
+         margin-left: auto;
+         margin-right: auto;
+      }
+
+      label {
+         font-size: 14px;
+         color: #333;
+         display: block;
+         margin-bottom: 8px;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      input[type="date"] {
+         width: 100%;
+         padding: 10px;
+         margin-bottom: 12px;
+         border: 1px solid #ccc;
+         border-radius: 4px;
+         font-size: 14px;
+      }
+
+      input[type="submit"] {
+         background-color: #4CAF50;
+         color: white;
+         border: none;
+         padding: 10px 20px;
+         cursor: pointer;
+         font-size: 14px;
+         border-radius: 4px;
+         width: 100%;
+      }
+
+      input[type="submit"]:hover {
+         background-color: #45a049;
+      }
+
+      /* Table styling */
+      table {
+         width: 100%;
+         border-collapse: collapse;
+         margin-top: 20px;
+      }
+
+      th,
+      td {
+         padding: 12px;
+         text-align: left;
+         border-bottom: 1px solid #ddd;
+      }
+
+      th {
+         background-color: #f2f2f2;
+         color: #333;
+      }
+
+      td {
+         background-color: #ffffff;
+         color: #555;
+      }
+
+      h1 {
+         text-align: center;
+      }
+
+      /* Button styling */
+      button {
+         background-color: #007BFF;
+         color: white;
+         padding: 8px 15px;
+         border: none;
+         border-radius: 4px;
+         cursor: pointer;
+         font-size: 14px;
+      }
+
+      button:hover {
+         background-color: #0056b3;
+      }
+
+      #delbtn {
+         background-color: red;
+      }
+   </style>
+
 </head>
+
 <body>
-   
+   <h1>Patient Management</h1>
+
+   <form id="patientForm">
+      <label for="pid">Patient ID:</label>
+      <input type="text" id="pid" name="pid" required><br><br>
+
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name"><br><br>
+
+      <label for="age">Age:</label>
+      <input type="number" id="age" name="age"><br><br>
+
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob"><br><br>
+
+      <label for="gender">Gender:</label>
+      <input type="text" id="gender" name="gender"><br><br>
+
+      <label for="bloodGroup">Blood Group:</label>
+      <input type="text" id="bloodGroup" name="bloodGroup"><br><br>
+
+      <label for="contactNo">Contact Number:</label>
+      <input type="text" id="contactNo" name="contactNo"><br><br>
+
+      <label for="emergencyContactNo">Emergency Contact Number:</label>
+      <input type="text" id="emergencyContactNo" name="emergencyContactNo"><br><br>
+
+      <label for="address">Flat No & Building Name:</label>
+      <input type="text" id="address" name="address"><br><br>
+
+      <label for="streetArea">Street & Area Name:</label>
+      <input type="text" id="streetArea" name="streetArea"><br><br>
+
+      <input type="submit" value="Add Patient">
+   </form>
+
+   <table id="patientTable">
+      <thead>
+         <tr>
+            <th>Patient ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>DOB</th>
+            <th>Gender</th>
+            <th>Blood Group</th>
+            <th>Contact No</th>
+            <th>Emergency Contact No</th>
+            <th>Flat No & Building</th>
+            <th>Street & Area</th>
+         </tr>
+      </thead>
+      <tbody id="patientTableBody">
+      </tbody>
+
+   </table>
+
+   <script>
+      function loadPatients() {
+         fetch("http://localhost:3003/patient")
+            .then(response => response.json())
+            .then(patients => {
+               const tableBody = document.getElementById("patientTableBody");
+               tableBody.innerHTML = ""; // Clear existing rows
+
+               patients.forEach(patient => {
+                  const row = document.createElement("tr");
+                  row.innerHTML = `
+               <td>${patient.pid}</td>
+               <td>${patient.Name}</td>
+               <td>${patient.Age}</td>
+               <td>${patient.DOB}</td>
+               <td>${patient.Gender}</td>
+               <td>${patient.BloodGroup}</td>
+               <td>${patient.ContactNo}</td>
+               <td>${patient.EmergencyContactNo}</td>
+               <td>${patient.FlatNo_BldgName}</td>
+               <td>${patient.Street_AreaName}</td>
+               <td>
+                  <button onclick="updatePatient(${patient.pid})">Update</button>
+                  <button id="delbtn" onclick="deletePatient(${patient.pid})">Delete</button>
+               </td>
+            `;
+                  tableBody.appendChild(row);
+               });
+            })
+            .catch(error => console.error("Error loading patients:", error));
+      }
+
+      function addPatient(event) {
+         event.preventDefault();
+
+         const formData = {
+            pid: document.getElementById("pid").value,
+            Name: document.getElementById("name").value,
+            Age: document.getElementById("age").value,
+            DOB: document.getElementById("dob").value,
+            Gender: document.getElementById("gender").value,
+            BloodGroup: document.getElementById("bloodGroup").value,
+            ContactNo: document.getElementById("contactNo").value,
+            EmergencyContactNo: document.getElementById("emergencyContactNo").value,
+            FlatNo_BldgName: document.getElementById("address").value,
+            Street_AreaName: document.getElementById("streetArea").value,
+         };
+
+         fetch("http://localhost:3003/patient", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+         })
+            .then(response => response.text())
+            .then(data => {
+               alert(data);
+               loadPatients(); // Refresh the table
+            })
+            .catch(error => console.error("Error adding patient:", error));
+      }
+      window.onload = loadPatients;
+      document.getElementById("patientForm").addEventListener("submit", addPatient);
+   </script>
 </body>
+
 </html>

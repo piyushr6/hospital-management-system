@@ -30,6 +30,21 @@ db.connect((err) => {
 
 // Mapping tables and columns for different entities
 const tableMappings = {
+   patient: {
+      tableName: "patient",
+      columns: {
+         pid: "pid",
+         name: "Name",
+         age: "Age",
+         dob: "DOB",
+         gender: "Gender",
+         bloodGroup: "BloodGroup",
+         contactNo: "ContactNo",
+         emergencyContactNo: "EmergencyContactNo",
+         address: "FlatNo_BldgName",
+         streetArea: "Street_AreaName"
+      }
+   },
    doctor: {
       tableName: "doctor",
       columns: {
@@ -48,8 +63,22 @@ const tableMappings = {
          status: "status",
          contactNumber: "contact_no"
       }
+   },
+   bill: {
+      tableName: "bill",
+      columns: {
+         billNo: "BillNo",
+         firstName: "FirstName",
+         middleName: "MiddleName",
+         lastName: "LastName",
+         amount: "Amount",
+         modeOfPayment: "Mode_of_payment",
+         dateOfAdmission: "DateOfAdmission",
+         dateOfDischarge: "DateOfDischarge"
+      }
    }
 };
+
 
 // Function to handle the common GET request for any table
 const getEntityData = (entity, res) => {
@@ -235,3 +264,24 @@ app.put("/ambulance/:id", (req, res) => {
 app.delete("/ambulance/:id", (req, res) => {
    deleteEntityData("ambulance", req, res);
 });
+
+// GET route for patients
+app.get("/patient", (req, res) => {
+   getEntityData("patient", res);
+});
+
+app.get("/bill", (req, res) => getEntityData("bill", res));
+
+// POST route to add a bill
+app.post("/bill", (req, res) => addEntityData("bill", req, res));
+
+// DELETE route to delete a bill by its ID
+app.delete("/bill/:id", (req, res) => deleteEntityData("bill", req, res));
+
+// PUT route to update a bill by its ID
+app.put("/bill/:id", (req, res) => updateEntityData("bill", req, res));
+
+// DELETE route to delete a bill by its ID
+app.delete("/bill/:id", (req, res) => deleteEntityData("bill", req, res));
+
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
