@@ -169,7 +169,7 @@
 
    <script>
       function loadPatients() {
-         fetch("http://localhost:3003/patient")
+         fetch("http://localhost:3004/patient")
             .then(response => response.json())
             .then(patients => {
                const tableBody = document.getElementById("patientTableBody");
@@ -215,12 +215,13 @@
             Street_AreaName: document.getElementById("streetArea").value,
          };
 
-         fetch("http://localhost:3003/patient", {
+         fetch("http://localhost:3004/patient", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(pid, name, age, dob, gender, bloodGroup, contactNo, emergencyContactNo, address,
+               streetArea),
          })
             .then(response => response.text())
             .then(data => {
@@ -229,6 +230,71 @@
             })
             .catch(error => console.error("Error adding patient:", error));
       }
+
+      // Function to delete a patient by its pid
+      function deletePatient(pid) {
+         if (confirm("Are you sure you want to delete this patient?")) {
+            fetch(`http://localhost:3004/patient/${pid}`, {
+               method: "DELETE",
+            })
+               .then(response => {
+                  if (response.ok) {
+                     alert("Patient deleted successfully!");
+                     loadPatients(); // Reload table after deletion
+                  } else {
+                     alert("Failed to delete the patient.");
+                  }
+               })
+               .catch(error => console.error("Error deleting patient:", error));
+         }
+      }
+
+      // Function to update a patient's information by its pid
+      function updatePatient(pid) {
+         const newName = prompt("Enter the new name:");
+         const newAge = prompt("Enter the new age:");
+         const newDOB = prompt("Enter the new date of birth (YYYY-MM-DD):");
+         const newGender = prompt("Enter the new gender (Male/Female/Other):");
+         const newBloodGroup = prompt("Enter the new blood group:");
+         const newContactNo = prompt("Enter the new contact number:");
+         const newEmergencyContactNo = prompt("Enter the new emergency contact number:");
+         const newAddress = prompt("Enter the new address:");
+         const newStreetArea = prompt("Enter the new street/area:");
+
+         if (newName && newAge && newDOB && newGender && newBloodGroup && newContactNo && newEmergencyContactNo && newAddress && newStreetArea) {
+            fetch(`http://localhost:3004/patient/${pid}`, {
+               method: "PUT",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+               body: JSON.stringify({
+                  name: newName,
+                  age: parseInt(newAge), // Ensure age is an integer
+                  dob: newDOB,
+                  gender: newGender,
+                  bloodGroup: newBloodGroup,
+                  contactNo: newContactNo,
+                  emergencyContactNo: newEmergencyContactNo,
+                  address: newAddress,
+                  streetArea: newStreetArea
+               }),
+            })
+               .then(response => {
+                  if (response.ok) {
+                     alert("Patient updated successfully!");
+                     loadPatients(); // Reload table after update
+                  } else {
+                     alert("Failed to update the patient.");
+                  }
+               })
+               .catch(error => console.error("Error updating patient:", error));
+         } else {
+            alert("All fields are required for updating.");
+         }
+      }
+
+
+
       window.onload = loadPatients;
       document.getElementById("patientForm").addEventListener("submit", addPatient);
    </script>
