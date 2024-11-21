@@ -7,7 +7,7 @@ dotenv.config();
 
 
 const app = express();
-const PORT = 3003;
+const PORT = 3006;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -197,7 +197,7 @@ app.listen(PORT, () => {
 // Function to delete an ambulance by its number
 function deleteAmbulance(ambulanceNumber) {
    if (confirm("Are you sure you want to delete this ambulance?")) {
-      fetch(`http://localhost:3003/ambulance/${ambulanceNumber}`, {
+      fetch(`http://localhost:3006/ambulance/${ambulanceNumber}`, {
          method: "DELETE",
       })
          .then(response => {
@@ -219,7 +219,7 @@ function updateAmbulance(ambulanceNumber) {
    const newContactNumber = prompt("Enter the new contact number:");
 
    if (newDriverName && newStatus && newContactNumber) {
-      fetch(`http://localhost:3003/ambulance/${ambulanceNumber}`, {
+      fetch(`http://localhost:3006/ambulance/${ambulanceNumber}`, {
          method: "PUT",
          headers: {
             "Content-Type": "application/json",
@@ -241,6 +241,64 @@ function updateAmbulance(ambulanceNumber) {
          .catch(error => console.error("Error updating ambulance:", error));
    } else {
       alert("All fields are required for updating.");
+   }
+}
+
+// Function to delete a bill by its BillNo
+function deleteBill(billNo) {
+   if (confirm("Are you sure you want to delete this bill?")) {
+      fetch(`http://localhost:3006/bill/${billNo}`, {
+         method: "DELETE",
+      })
+         .then(response => {
+            if (response.ok) {
+               alert("Bill deleted successfully!");
+               loadBills(); // Reload table after deletion
+            } else {
+               alert("Failed to delete the bill.");
+            }
+         })
+         .catch(error => console.error("Error deleting bill:", error));
+   }
+}
+
+// Function to update a bill's information by its BillNo
+function updateBill(billNo) {
+   const newFirstName = prompt("Enter the new first name:");
+   const newMiddleName = prompt("Enter the new middle name:");
+   const newLastName = prompt("Enter the new last name:");
+   const newAmount = prompt("Enter the new amount:");
+   const newModeOfPayment = prompt("Enter the new mode of payment:");
+   const newDateOfAdmission = prompt("Enter the new date of admission (YYYY-MM-DD):");
+   const newDateOfDischarge = prompt("Enter the new date of discharge (YYYY-MM-DD):");
+
+   if (newFirstName && newLastName && newAmount && newModeOfPayment && newDateOfAdmission && newDateOfDischarge) {
+      fetch(`http://localhost:3006/bill/${billNo}`, {
+         method: "PUT",
+         headers: {
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify({
+            firstName: newFirstName,
+            middleName: newMiddleName || null, // Optional middle name
+            lastName: newLastName,
+            amount: parseFloat(newAmount), // Convert amount to number
+            modeOfPayment: newModeOfPayment,
+            dateOfAdmission: newDateOfAdmission,
+            dateOfDischarge: newDateOfDischarge
+         }),
+      })
+         .then(response => {
+            if (response.ok) {
+               alert("Bill updated successfully!");
+               loadBills(); // Reload table after update
+            } else {
+               alert("Failed to update the bill.");
+            }
+         })
+         .catch(error => console.error("Error updating bill:", error));
+   } else {
+      alert("All required fields must be filled out for updating.");
    }
 }
 
@@ -284,4 +342,4 @@ app.put("/bill/:id", (req, res) => updateEntityData("bill", req, res));
 // DELETE route to delete a bill by its ID
 app.delete("/bill/:id", (req, res) => deleteEntityData("bill", req, res));
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`))

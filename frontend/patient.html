@@ -169,7 +169,7 @@
 
    <script>
       function loadPatients() {
-         fetch("http://localhost:3004/patient")
+         fetch("http://localhost:3006/patient")
             .then(response => response.json())
             .then(patients => {
                const tableBody = document.getElementById("patientTableBody");
@@ -215,7 +215,7 @@
             Street_AreaName: document.getElementById("streetArea").value,
          };
 
-         fetch("http://localhost:3004/patient", {
+         fetch("http://localhost:3006/patient", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
@@ -234,7 +234,7 @@
       // Function to delete a patient by its pid
       function deletePatient(pid) {
          if (confirm("Are you sure you want to delete this patient?")) {
-            fetch(`http://localhost:3004/patient/${pid}`, {
+            fetch(`http://localhost:3006/patient/${pid}`, {
                method: "DELETE",
             })
                .then(response => {
@@ -262,7 +262,7 @@
          const newStreetArea = prompt("Enter the new street/area:");
 
          if (newName && newAge && newDOB && newGender && newBloodGroup && newContactNo && newEmergencyContactNo && newAddress && newStreetArea) {
-            fetch(`http://localhost:3004/patient/${pid}`, {
+            fetch(`http://localhost:3006/patient/${pid}`, {
                method: "PUT",
                headers: {
                   "Content-Type": "application/json",

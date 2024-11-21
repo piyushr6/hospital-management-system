@@ -158,7 +158,7 @@
    <script>
       // Function to load all doctors from the server and populate the table
       function loadDoctors() {
-         fetch("http://localhost:3004/doctor")
+         fetch("http://localhost:3006/doctor")
             .then(response => response.json())
             .then(doctors => {
                const tableBody = document.getElementById("doctorTable").getElementsByTagName("tbody")[0];
@@ -193,7 +193,7 @@
          const department = document.getElementById("department").value;
          const experience = document.getElementById("experience").value;
 
-         fetch("http://localhost:3004/doctor", {
+         fetch("http://localhost:3006/doctor", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
@@ -216,7 +216,7 @@
          const newExperience = prompt("Enter new years of experience:");
 
          if (newName && newLicense && newDepartment && newExperience) {
-            fetch(`http://localhost:3004/doctor/${id}`, {
+            fetch(`http://localhost:3006/doctor/${id}`, {
                method: "PUT",
                headers: {
                   "Content-Type": "application/json",
@@ -243,7 +243,7 @@
       // Function to delete a doctor
       function deleteDoctor(id) {
          if (confirm("Are you sure you want to delete this doctor?")) {
-            fetch(`http://localhost:3004/doctor/${id}`, {
+            fetch(`http://localhost:3006/doctor/${id}`, {
                method: "DELETE",
             })
                .then(response => {

@@ -132,7 +132,7 @@
    </table>
    <script>
       function loadAmbulances() {
-         fetch("http://localhost:3004/ambulance")
+         fetch("http://localhost:3006/ambulance")
             .then(response => response.json())
             .then(ambulances => {
                const tableBody = document.getElementById("ambulanceTable").getElementsByTagName("tbody")[0];
@@ -160,7 +160,7 @@
          const driverName = document.getElementById("driverName").value;
          const status = document.getElementById("status").value;
          const contactNumber = document.getElementById("contactNumber").value;
-         fetch("http://localhost:3004/ambulance", {
+         fetch("http://localhost:3006/ambulance", {
             method: "POST",
             headers: {
                "Content-Type": "application/json",
@@ -181,7 +181,7 @@
          const newContactNumber = prompt("Enter new contact number:");
 
          if (newDriverName && newStatus && newContactNumber) {
-            fetch(`http://localhost:3004/ambulance/${id}`, {
+            fetch(`http://localhost:3006/ambulance/${id}`, {
                method: "PUT",
                headers: {
                   "Content-Type": "application/json",
@@ -207,7 +207,7 @@
       // Function to delete an ambulance
       function deleteAmbulance(id) {
          if (confirm("Are you sure you want to delete this ambulance?")) {
-            fetch(`http://localhost:3004/ambulance/${id}`, {
+            fetch(`http://localhost:3006/ambulance/${id}`, {
                method: "DELETE",
             })
                .then(response => {
